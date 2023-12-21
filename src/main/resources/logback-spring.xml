@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property value="/home/apps/logger/adapter/logs/" name="DEV_HOME"/>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE-LOG">
+        <encoder>
+            <pattern>%X{sessionId} ${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="INFO-LOG">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${DEV_HOME}/info.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%X{sessionId} ${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${DEV_HOME}/archived/info.%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1000MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="DEBUG-LOG">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${DEV_HOME}/debug.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%X{sessionId} ${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${DEV_HOME}/archived/debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1000MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="ERROR-LOG">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${DEV_HOME}/error.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%X{sessionId} ${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${DEV_HOME}/archived/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1000MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+
+
+
+    <springProfile name="dev">
+        <logger name="org.springframework" additivity="false" level="info">
+            <appender-ref ref="INFO-LOG"/>
+            <appender-ref ref="DEBUG-LOG"/>
+            <appender-ref ref="ERROR-LOG"/>
+        </logger>
+        <logger name="bd.gov" additivity="false" level="debug">
+            <appender-ref ref="INFO-LOG"/>
+            <appender-ref ref="DEBUG-LOG"/>
+            <appender-ref ref="ERROR-LOG"/>
+        </logger>
+        <root level="INFO">
+            <appender-ref ref="ERROR-LOG"/>
+            <appender-ref ref="CONSOLE-LOG"/>
+        </root>
+    </springProfile>
+
+
+    <springProfile name="prod">
+        <logger name="org.springframework" additivity="false" level="debug">
+            <appender-ref ref="INFO-LOG"/>
+            <appender-ref ref="DEBUG-LOG"/>
+            <appender-ref ref="ERROR-LOG"/>
+        </logger>
+        <logger name="bd.gov" additivity="false" level="debug">
+            <appender-ref ref="INFO-LOG"/>
+            <appender-ref ref="DEBUG-LOG"/>
+            <appender-ref ref="ERROR-LOG"/>
+        </logger>
+        <root level="ERROR">
+            <appender-ref ref="ERROR-LOG"/>
+        </root>
+    </springProfile>
+
+
+</configuration>
